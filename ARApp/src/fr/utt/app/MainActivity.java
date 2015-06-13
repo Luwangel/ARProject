@@ -1,6 +1,13 @@
 package fr.utt.app;
 
+import gl.GL1Renderer;
+import gl.GLFactory;
+import system.ArActivity;
 import system.ConcreteSimpleLocationManager;
+import system.DefaultARSetup;
+import util.Vec;
+import worldData.World;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -12,23 +19,43 @@ import android.widget.TextView;
 public class MainActivity extends Activity {
 
 	private Button locationButton;
+	private Button arActivityButton;
+	private ConcreteSimpleLocationManager simpleLocationManager;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-				
-		this.locationButton = (Button) findViewById(R.id.buttonLocation);
-    	
-		final ConcreteSimpleLocationManager simpleLocationManager = new ConcreteSimpleLocationManager(this);
-		//simpleLocationManager.getLastStepPos();
+	
+		//Initialisation du LocationManager
+		this.simpleLocationManager = new ConcreteSimpleLocationManager(this);
 
+		//Récupération des boutons
+		this.locationButton = (Button) findViewById(R.id.buttonLocation);
+    	this.arActivityButton = (Button) findViewById(R.id.buttonARActivity);
+
+    	//Ajout des listeners sur les boutons
 		this.locationButton.setOnClickListener(new View.OnClickListener() {
 		    public void onClick(View v) {
 		    	
 		    	String location = simpleLocationManager.getCurrentLocation().toString();
 		    	TextView textviewLocation = (TextView) findViewById(R.id.textviewLocation);
 		        textviewLocation.setText(location);
+		    }
+		});
+		
+		this.arActivityButton.setOnClickListener(new View.OnClickListener() {
+		    public void onClick(View v) {
+		    	
+		    	//Ouverture d'une ARActivity
+		    	ArActivity.startWithSetup(MainActivity.this, new DefaultARSetup(){
+
+					@Override
+					public void addObjectsTo(GL1Renderer renderer, World world, GLFactory objectFactory) {
+						world.add(objectFactory.newSolarSystem(new Vec(10, 10, 0)));						
+					}
+
+				});
 		    }
 		});
 	}
