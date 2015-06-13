@@ -1,10 +1,10 @@
 package fr.utt.app;
 
+import fr.utt.ar.CustomARSetup;
 import gl.GL1Renderer;
 import gl.GLFactory;
 import system.ArActivity;
 import system.ConcreteSimpleLocationManager;
-import system.DefaultARSetup;
 import util.Vec;
 import worldData.World;
 
@@ -48,7 +48,7 @@ public class MainActivity extends Activity {
 		    public void onClick(View v) {
 		    	
 		    	//Ouverture d'une ARActivity
-		    	ArActivity.startWithSetup(MainActivity.this, new DefaultARSetup(){
+		    	ArActivity.startWithSetup(MainActivity.this, new CustomARSetup(){
 
 					@Override
 					public void addObjectsTo(GL1Renderer renderer, World world, GLFactory objectFactory) {
