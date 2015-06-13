@@ -18,32 +18,139 @@ public final class R {
          would include 7" and 10" devices in landscape (~960dp and ~1280dp respectively).
     
          */
-        public static final int activity_horizontal_margin=0x7f040000;
-        public static final int activity_vertical_margin=0x7f040001;
+        public static final int activity_horizontal_margin=0x7f060000;
+        public static final int activity_vertical_margin=0x7f060001;
     }
     public static final class drawable {
-        public static final int ic_launcher=0x7f020000;
-        public static final int logo_utt=0x7f020001;
+        public static final int correctcirclegray=0x7f020000;
+        public static final int correctcirclegreen=0x7f020001;
+        public static final int down=0x7f020002;
+        public static final int down2=0x7f020003;
+        public static final int elephant64=0x7f020004;
+        public static final int hippopotamus64=0x7f020005;
+        public static final int ic_launcher=0x7f020006;
+        public static final int icon=0x7f020007;
+        public static final int icon2=0x7f020008;
+        public static final int icon3=0x7f020009;
+        public static final int icon4=0x7f02000a;
+        public static final int icon6=0x7f02000b;
+        public static final int incorrectcirclegray=0x7f02000c;
+        public static final int incorrectcirclered=0x7f02000d;
+        public static final int infoboxblue=0x7f02000e;
+        public static final int infoboxblue2=0x7f02000f;
+        public static final int infogray=0x7f020010;
+        public static final int invisible=0x7f020011;
+        public static final int logo=0x7f020012;
+        public static final int logo_utt=0x7f020013;
+        public static final int logosmall=0x7f020014;
+        public static final int mapdotblue=0x7f020015;
+        public static final int mapdotgreen=0x7f020016;
+        public static final int mapdotred=0x7f020017;
+        public static final int mapdotyellow=0x7f020018;
+        public static final int minuscirclegray=0x7f020019;
+        public static final int p1=0x7f02001a;
+        public static final int p2=0x7f02001b;
+        public static final int p3=0x7f02001c;
+        public static final int panda64=0x7f02001d;
+        public static final int penguin64=0x7f02001e;
+        public static final int pluscirclegray=0x7f02001f;
+        public static final int questionboxgray=0x7f020020;
+        public static final int questioncircleblue=0x7f020021;
+        public static final int questioncirclegray=0x7f020022;
+        public static final int spaceship=0x7f020023;
+        public static final int starboxgreen=0x7f020024;
+        public static final int starcirclegray=0x7f020025;
+        public static final int starcirclegreen=0x7f020026;
+        public static final int up=0x7f020027;
+        public static final int up2=0x7f020028;
+        public static final int warningcirclegray=0x7f020029;
+        public static final int warningcirclered=0x7f02002a;
     }
     public static final class id {
-        public static final int action_settings=0x7f080002;
-        public static final int logoUtt=0x7f080001;
-        public static final int titleSplashscreen=0x7f080000;
+        public static final int EditText01=0x7f09002c;
+        public static final int IconView=0x7f090029;
+        public static final int IconWrapperView=0x7f090024;
+        public static final int ImageView01=0x7f09000e;
+        public static final int InfoSpacer=0x7f090027;
+        public static final int InfosWrapperView=0x7f090025;
+        public static final int LLA_bottom=0x7f090019;
+        public static final int LLA_left=0x7f09001a;
+        public static final int LLA_right=0x7f09001d;
+        public static final int LLA_top=0x7f090016;
+        public static final int LinLay_bottom=0x7f090021;
+        public static final int LinLay_bottomRight=0x7f090022;
+        public static final int LinLay_left=0x7f09001c;
+        public static final int LinLay_right=0x7f09001f;
+        public static final int LinLay_top=0x7f090018;
+        public static final int LinearLayout01=0x7f09000b;
+        public static final int LinearLayout02=0x7f09000c;
+        public static final int LinearLayout03=0x7f090013;
+        public static final int LinearLayout04=0x7f09000d;
+        public static final int LinearLayout05=0x7f090010;
+        public static final int LongDescrView=0x7f090028;
+        public static final int RelativeLayout01=0x7f090023;
+        public static final int ScrollView01=0x7f090011;
+        public static final int ShortDescrView=0x7f090026;
+        public static final int TextView01=0x7f090012;
+        public static final int action_settings=0x7f090036;
+        public static final int awfa_accText=0x7f090003;
+        public static final int awfa_image=0x7f090001;
+        public static final int awfa_layout=0x7f090000;
+        public static final int awfa_steps=0x7f090004;
+        public static final int awfa_warning=0x7f090005;
+        public static final int button1=0x7f090030;
+        public static final int button2=0x7f090035;
+        public static final int button3=0x7f090031;
+        public static final int buttonLocation=0x7f090007;
+        public static final int demoScreenLinView=0x7f09002b;
+        public static final int dialogTestButton=0x7f09000f;
+        public static final int errorMailButton=0x7f09002e;
+        public static final int errorText=0x7f09002d;
+        public static final int gameElementView1=0x7f090032;
+        public static final int gameElementView2=0x7f090034;
+        public static final int infoScreenScrollview=0x7f09002f;
+        public static final int linearLayout1=0x7f090002;
+        public static final int logoUtt=0x7f09000a;
+        public static final int main_view=0x7f090015;
+        public static final int ok_button=0x7f090014;
+        public static final int outerDemoLinLay=0x7f09002a;
+        public static final int progressBar1=0x7f090006;
+        public static final int radarView1=0x7f090033;
+        public static final int sBottom=0x7f090020;
+        public static final int sLeft=0x7f09001b;
+        public static final int sRight=0x7f09001e;
+        public static final int sTop=0x7f090017;
+        public static final int textviewLocation=0x7f090008;
+        public static final int titleSplashscreen=0x7f090009;
     }
     public static final class layout {
-        public static final int activity_main=0x7f030000;
-        public static final int activity_splashscreen=0x7f030001;
+        public static final int action_wait_for_accuracy_view=0x7f030000;
+        public static final int activity_main=0x7f030001;
+        public static final int activity_splashscreen=0x7f030002;
+        public static final int basicdialog=0x7f030003;
+        public static final int defaultlayout=0x7f030004;
+        public static final int defaultlistitemview=0x7f030005;
+        public static final int demoselector=0x7f030006;
+        public static final int errorreports=0x7f030007;
+        public static final int infoscreen=0x7f030008;
+        public static final int test_layout=0x7f030009;
     }
     public static final class menu {
-        public static final int main=0x7f070000;
-        public static final int splashscreen=0x7f070001;
+        public static final int main=0x7f080000;
+        public static final int splashscreen=0x7f080001;
+    }
+    public static final class raw {
+        public static final int camaro_mtl=0x7f040000;
+        public static final int camaro_obj=0x7f040001;
     }
     public static final class string {
-        public static final int action_settings=0x7f050002;
+        public static final int action_settings=0x7f050003;
         public static final int app_name=0x7f050000;
-        public static final int hello_world=0x7f050001;
-        public static final int title_activity_splashscreen=0x7f050003;
-        public static final int title_splashscreen=0x7f050004;
+        public static final int button_location=0x7f050006;
+        public static final int errorstring=0x7f050001;
+        public static final int hello_world=0x7f050002;
+        public static final int title_activity_splashscreen=0x7f050004;
+        public static final int title_splashscreen=0x7f050005;
     }
     public static final class style {
         /** 
@@ -67,10 +174,10 @@ public final class R {
     
  API 14 theme customizations can go here. 
          */
-        public static final int AppBaseTheme=0x7f060000;
+        public static final int AppBaseTheme=0x7f070000;
         /**  Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
          */
-        public static final int AppTheme=0x7f060001;
+        public static final int AppTheme=0x7f070001;
     }
 }
