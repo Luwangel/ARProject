@@ -2,12 +2,12 @@ package fr.utt.app;
 
 import fr.utt.ar.CustomARSetup;
 import gl.GL1Renderer;
+import gl.GLCamera;
 import gl.GLFactory;
 import system.ArActivity;
 import system.ConcreteSimpleLocationManager;
 import util.Vec;
 import worldData.World;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -39,6 +39,8 @@ public class MainActivity extends Activity {
 		    public void onClick(View v) {
 		    	
 		    	String location = simpleLocationManager.getCurrentLocation().toString();
+		    	GLCamera camera = new GLCamera();
+		    	location += "  " + camera.getRotation().toString();
 		    	TextView textviewLocation = (TextView) findViewById(R.id.textviewLocation);
 		        textviewLocation.setText(location);
 		    }
