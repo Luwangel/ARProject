@@ -9,6 +9,10 @@ import system.ConcreteSimpleLocationManager;
 import util.Vec;
 import worldData.World;
 import android.app.Activity;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,7 +44,29 @@ public class MainActivity extends Activity {
 		    	
 		    	String location = simpleLocationManager.getCurrentLocation().toString();
 		    	GLCamera camera = new GLCamera();
-		    	location += "  " + camera.getRotation().toString();
+		    	String cameraData = camera.getRotation().toString();
+		    	
+		    	if(null != cameraData && !cameraData.equals("")) {
+		    		location = location.concat(cameraData);
+		    	} else {
+		    		location = location.concat("no data for camera");
+		    	}
+		        
+		        SensorManager mSensorManager;
+		        Sensor mSensor;
+		        
+		        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+		        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR);
+		        float[] rotation = new float[4];
+		        float[] i = new float[4];
+		        boolean success = mSensorManager.getRotationMatrix(rotation, i, new float[3], new float[3]);
+		        if(success) {
+		        	location = location.concat(rotation.toString());
+		        } else {
+		        	location = location.concat("bug sensor rotation");
+		        }
+		        
+
 		    	TextView textviewLocation = (TextView) findViewById(R.id.textviewLocation);
 		        textviewLocation.setText(location);
 		    }
@@ -54,7 +80,7 @@ public class MainActivity extends Activity {
 
 					@Override
 					public void addObjectsTo(GL1Renderer renderer, World world, GLFactory objectFactory) {
-						world.add(objectFactory.newSolarSystem(new Vec(10, 10, 0)));						
+						world.add(objectFactory.newSolarSystem(new Vec(10, 10, 0)));					
 					}
 
 				});
