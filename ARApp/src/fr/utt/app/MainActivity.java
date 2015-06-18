@@ -5,26 +5,36 @@ import gl.GL1Renderer;
 import gl.GLCamera;
 import gl.GLFactory;
 import system.ArActivity;
+import system.CameraView;
 import system.ConcreteSimpleLocationManager;
 import util.Vec;
 import worldData.World;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.hardware.Camera;
 import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SurfaceHolder;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements SensorEventListener{
 
 	private Button locationButton;
 	private Button arActivityButton;
 	private ConcreteSimpleLocationManager simpleLocationManager;
+	private float[] mGravity;
+	private float[] mGeomagnetic;
+	private float azimut;
+    private float pitch;
+    private float roll; 
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +54,13 @@ public class MainActivity extends Activity {
 		    	
 		    	String location = simpleLocationManager.getCurrentLocation().toString();
 		    	GLCamera camera = new GLCamera();
-		    	String cameraData = camera.getRotation().toString();
+		    	
+		    	CameraView camerav = new CameraView(v.getContext());
+		    	Float posX = camerav.getRotationX();
+		    	Float posY = camerav.getRotationY();
+		    	String cameraData = camera.getMyNewPosition().toString();
+		    	
+		    	location = location.concat("Rotation en X : " + posX + "  Rotation y : " + posY + "  ");
 		    	
 		    	if(null != cameraData && !cameraData.equals("")) {
 		    		location = location.concat(cameraData);
@@ -54,17 +70,19 @@ public class MainActivity extends Activity {
 		        
 		        SensorManager mSensorManager;
 		        Sensor mSensor;
-		        
 		        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR);
 		        float[] rotation = new float[4];
 		        float[] i = new float[4];
-		        boolean success = mSensorManager.getRotationMatrix(rotation, i, new float[3], new float[3]);
+		        
+		        boolean success = mSensorManager.getRotationMatrix(rotation, i, mGravity, mGeomagnetic);
 		        if(success) {
 		        	location = location.concat(rotation.toString());
 		        } else {
 		        	location = location.concat("bug sensor rotation");
 		        }
+		        
+		        location = location.concat(" Azimut : " + azimut + "  Pitch : "+ pitch + "  Roll : " + roll);
 		        
 
 		    	TextView textviewLocation = (TextView) findViewById(R.id.textviewLocation);
@@ -105,5 +123,31 @@ public class MainActivity extends Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	@Override
+	public void onSensorChanged(SensorEvent event) {if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
+	      mGravity = event.values;
+	    if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
+	      mGeomagnetic = event.values;
+	    if (mGravity != null && mGeomagnetic != null) {
+	      float R[] = new float[9];
+	      float I[] = new float[9];
+	      boolean success = SensorManager.getRotationMatrix(R, I, mGravity, mGeomagnetic);
+	      if (success) {
+	        float orientation[] = new float[3];
+	        SensorManager.getOrientation(R, orientation);
+	        azimut = orientation[0]; // orientation contains: azimut, pitch and roll
+	        pitch = orientation[1];
+	        roll = orientation[2];
+	      }
+	    }
+//	    mCustomDrawableView.invalidate();
+	   }
+	
+	@Override
+	public void onAccuracyChanged(Sensor sensor, int accuracy) {
+		// TODO Auto-generated method stub
+		
 	}
 }
