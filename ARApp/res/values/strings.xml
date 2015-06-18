@@ -6,7 +6,7 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_splashscreen">SplashscreenActivity</string>
     <string name="title_splashscreen">Projet de réalité augmentée</string>
-    <string name="button_location">Données de géolocalisation</string>
+    <string name="button_show_datas">Afficher les données</string>
     <string name="button_aractivity">Lancer la réalité aurgmentée</string>
 
 </resources>

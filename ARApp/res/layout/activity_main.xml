@@ -13,14 +13,19 @@
     	android:layout_height="wrap_content"
         android:orientation="vertical">
     
-    <Button 
-        android:id="@+id/buttonLocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/button_location"/>
-    
     <TextView
         android:id="@+id/textviewLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+        
+    <Button 
+        android:id="@+id/buttonShowDatas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_show_datas"/>
+    
+    <TextView
+        android:id="@+id/textviewDatas"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
     

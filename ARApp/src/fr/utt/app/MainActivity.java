@@ -6,7 +6,6 @@ import gl.GLCamera;
 import gl.GLFactory;
 import system.ArActivity;
 import system.CameraView;
-import system.ConcreteSimpleLocationManager;
 import util.Vec;
 import worldData.World;
 import android.app.Activity;
@@ -17,19 +16,35 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.SurfaceHolder;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class MainActivity extends Activity implements SensorEventListener{
+public class MainActivity extends Activity implements SensorEventListener, LocationListener {
 
-	private Button locationButton;
+	public static String TAG = "MainActivity";
+	
+	public static int FREQUENCY_LOCATION_UPDATE = 10000;
+	
+	/* Interface */
+	private Button showDatasButton;
 	private Button arActivityButton;
-	private ConcreteSimpleLocationManager simpleLocationManager;
+		
+	/* Géolocalisation */
+	private LocationManager lm;
+    private double latitude;
+    private double longitude;
+    private double altitude;
+    private float accuracy;
+    
 	private float[] mGravity;
 	private float[] mGeomagnetic;
 	private float azimut;
@@ -40,19 +55,17 @@ public class MainActivity extends Activity implements SensorEventListener{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-	
-		//Initialisation du LocationManager
-		this.simpleLocationManager = new ConcreteSimpleLocationManager(this);
 
 		//Récupération des boutons
-		this.locationButton = (Button) findViewById(R.id.buttonLocation);
+		this.showDatasButton = (Button) findViewById(R.id.buttonShowDatas);
     	this.arActivityButton = (Button) findViewById(R.id.buttonARActivity);
 
     	//Ajout des listeners sur les boutons
-		this.locationButton.setOnClickListener(new View.OnClickListener() {
+		this.showDatasButton.setOnClickListener(new View.OnClickListener() {
 		    public void onClick(View v) {
 		    	
-		    	String location = simpleLocationManager.getCurrentLocation().toString();
+		    	String datas = "";
+		    	
 		    	GLCamera camera = new GLCamera();
 		    	
 		    	CameraView camerav = new CameraView(v.getContext());
@@ -60,33 +73,36 @@ public class MainActivity extends Activity implements SensorEventListener{
 		    	Float posY = camerav.getRotationY();
 		    	String cameraData = camera.getMyNewPosition().toString();
 		    	
-		    	location = location.concat("Rotation en X : " + posX + "  Rotation y : " + posY + "  ");
+		    	datas = datas.concat("\nRotation en X : " + posX + "  Rotation y : " + posY + "  ");
 		    	
 		    	if(null != cameraData && !cameraData.equals("")) {
-		    		location = location.concat(cameraData);
+		    		datas = datas.concat(cameraData);
 		    	} else {
-		    		location = location.concat("no data for camera");
+		    		datas = datas.concat("no data for camera");
 		    	}
 		        
 		        SensorManager mSensorManager;
 		        Sensor mSensor;
 		        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-		        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR);
+		        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
+		        
 		        float[] rotation = new float[4];
 		        float[] i = new float[4];
+		        mGravity = new float[4];
+		        mGeomagnetic = new float[4];
 		        
 		        boolean success = mSensorManager.getRotationMatrix(rotation, i, mGravity, mGeomagnetic);
 		        if(success) {
-		        	location = location.concat(rotation.toString());
+		        	datas = datas.concat(rotation.toString());
 		        } else {
-		        	location = location.concat("bug sensor rotation");
+		        	datas = datas.concat("bug sensor rotation");
 		        }
 		        
-		        location = location.concat(" Azimut : " + azimut + "  Pitch : "+ pitch + "  Roll : " + roll);
+		        datas = datas.concat(" Azimut : " + azimut + "  Pitch : "+ pitch + "  Roll : " + roll);
 		        
 
-		    	TextView textviewLocation = (TextView) findViewById(R.id.textviewLocation);
-		        textviewLocation.setText(location);
+		    	TextView textviewDatas = (TextView) findViewById(R.id.textviewDatas);
+		        textviewDatas.setText(datas);
 		    }
 		});
 		
@@ -100,12 +116,25 @@ public class MainActivity extends Activity implements SensorEventListener{
 					public void addObjectsTo(GL1Renderer renderer, World world, GLFactory objectFactory) {
 						world.add(objectFactory.newSolarSystem(new Vec(10, 10, 0)));					
 					}
-
 				});
 		    }
 		});
 	}
 
+	
+	@Override
+	protected void onResume() {
+	    super.onResume();
+	    
+	    initLocationManager();
+	}
+	 
+	@Override
+	protected void onPause() {
+	    super.onPause();
+	    lm.removeUpdates(this);
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -124,6 +153,9 @@ public class MainActivity extends Activity implements SensorEventListener{
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
+	
+	/* Implémentation de SensorEventListener */
 	
 	@Override
 	public void onSensorChanged(SensorEvent event) {if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
@@ -150,4 +182,72 @@ public class MainActivity extends Activity implements SensorEventListener{
 		// TODO Auto-generated method stub
 		
 	}
+	
+	
+	/* Implémentation de LocationListener */
+	 
+    @Override
+    public void onLocationChanged(Location location) {
+        
+    	latitude = location.getLatitude();
+        longitude = location.getLongitude();
+        altitude = location.getAltitude();
+        accuracy = location.getAccuracy();
+ 
+        //Affichage de la nouvelle position
+        
+        Toast.makeText(this, "Location changed :" + " latitude" + latitude + " longitude" + longitude, Toast.LENGTH_LONG).show();
+    
+    	TextView textviewLocation = (TextView) findViewById(R.id.textviewLocation);
+        textviewLocation.setText(location.toString());
+    }
+ 
+    @Override
+    public void onProviderDisabled(String provider) {
+    	
+        Toast.makeText(this, "Provider disabled : " + provider, Toast.LENGTH_SHORT).show();
+    }
+ 
+    @Override
+    public void onProviderEnabled(String provider) {
+
+        Toast.makeText(this, "Provider enabled : " + provider, Toast.LENGTH_SHORT).show();
+    }
+ 
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        
+    	String newStatus = "";
+        
+    	switch (status) {
+        case LocationProvider.OUT_OF_SERVICE:
+            newStatus = "OUT_OF_SERVICE";
+            break;
+        case LocationProvider.TEMPORARILY_UNAVAILABLE:
+            newStatus = "TEMPORARILY_UNAVAILABLE";
+            break;
+        case LocationProvider.AVAILABLE:
+            newStatus = "AVAILABLE";
+            break;
+        }
+
+        Toast.makeText(this, "Status of the location provider changed : " + newStatus, Toast.LENGTH_SHORT).show();
+    }
+    
+    
+    /* Méthodes */
+    
+    private void initLocationManager() {
+    
+
+	    //Initialisation du LocationManager à chaque ouverture (ou réouverture) de l'activity
+	    lm = (LocationManager) this.getSystemService(LOCATION_SERVICE);
+	    	    
+	    if (lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+	        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, MainActivity.FREQUENCY_LOCATION_UPDATE, 0, this);
+	    }
+	    else {
+	    	lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MainActivity.FREQUENCY_LOCATION_UPDATE, 0, this);
+	    }
+    }
 }
