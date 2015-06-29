@@ -6,6 +6,7 @@ import gl.GLCamera;
 import gl.GLFactory;
 import system.ArActivity;
 import system.CameraView;
+import util.IO;
 import util.Vec;
 import worldData.World;
 import android.app.Activity;
@@ -114,7 +115,9 @@ public class MainActivity extends Activity implements SensorEventListener, Locat
 
 					@Override
 					public void addObjectsTo(GL1Renderer renderer, World world, GLFactory objectFactory) {
-						world.add(objectFactory.newSolarSystem(new Vec(10, 10, 0)));					
+						Bitmap image = IO.loadBitmapFromURL("http://t3.gstatic.com/images?q=tbn:ANd9GcSXqX5OmNOtEo-Mmhp8H1axjvq-cBq5zlYQnJomegQ76xlnlzM2cv42y4Tw");              
+						world.add(objectFactory.newTexturedSquare("image test", image, 10));
+						world.add(objectFactory.newArrow());
 					}
 				});
 		    }

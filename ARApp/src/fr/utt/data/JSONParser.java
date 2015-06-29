@@ -26,7 +26,7 @@ public class JSONParser {
 	
 	/* Méthodes */
 	
-	public static POI ImportPOI(String jsonStr) {
+	public static POI ImportPOI(String jsonStr) throws Exception {
 		
 		if (jsonStr != null && !jsonStr.isEmpty()) {
 			
@@ -35,7 +35,7 @@ public class JSONParser {
 			try {
                 
 				JSONObject jsonObj = new JSONObject(jsonStr);
-
+				
 				//NAME
                 poi.setName(jsonObj.getString(TAG_NAME));
                 
@@ -55,40 +55,40 @@ public class JSONParser {
                 	
                     for (int i = 0; i < resources.length(); i++) {
                         
-                    	JSONObject c = resources.getJSONObject(i);
+                    	JSONObject ressJSONObj = resources.getJSONObject(i); //Représente une ressource
                         
                     	//Données globales
                     	
-                        String type = c.getString(TAG_RESOURCES_TYPE);
-                        String author = c.getString(TAG_RESOURCES_AUTHOR);
-                        String description = c.getString(TAG_RESOURCES_DESCRIPTION);
+                        String type = ressJSONObj.getString(TAG_RESOURCES_TYPE);
+                        String author = ressJSONObj.getString(TAG_RESOURCES_AUTHOR);
+                        String description = ressJSONObj.getString(TAG_RESOURCES_DESCRIPTION);
                         
-                        Resource r = null;
+                        Resource ress = null;
 
                     	//Choix du type de ressource
-                    	
+                    	                      
                         if(type.equalsIgnoreCase(ResourceType.IMAGE.name())) {
                         	
-                        	r = new ImageResource();
-                        	((ImageResource)r).setURLImage(c.getString(TAG_RESOURCES_URL));
+                        	ress = new ImageResource();
+                        	((ImageResource)ress).setURLImage(ressJSONObj.getString(TAG_RESOURCES_URL));
                         	
                         }
                         else if(type.equalsIgnoreCase(ResourceType.IMAGEAR.name()))	{
                         	
-                        	r = new ImageARResource();
-                        	((ImageARResource)r).setURLImage(c.getString(TAG_RESOURCES_URL));
+                        	ress = new ImageARResource();
+                        	((ImageARResource)ress).setURLImage(ressJSONObj.getString(TAG_RESOURCES_URL));
                         }
                         else if(type.equalsIgnoreCase(ResourceType.TEXT.name())) {
                         	
-                        	r = new TextResource();
-                        	((TextResource)r).setContent(c.getString(TAG_RESOURCES_CONTENT));
+                        	ress = new TextResource();
+                        	((TextResource)ress).setContent(ressJSONObj.getString(TAG_RESOURCES_CONTENT));
                         }
                         
-                        if(r != null) {
+                        if(ress != null) {
                         	
-                        	r.setAuthor(author);
-                        	r.setDescription(description);
-                            listResources.add(r);
+                        	ress.setAuthor(author);
+                        	ress.setDescription(description);
+                            listResources.add(ress);
                         }
                         	
                     }
@@ -104,11 +104,68 @@ public class JSONParser {
 			
 			return poi;
 		}
+		else {
+			throw new Exception("JSon file is null of empty.");
+		}
+	}
+	
+	public static String exportPOI(POI poi) throws Exception {
+				
+		JSONObject jsonObj = new JSONObject();
 		
-		return null;
+		if(poi != null) {
+			
+			//NAME
+			jsonObj.put(TAG_NAME, poi.getName());
+			
+			//LOCATION
+			JSONObject location = new JSONObject();
+			location.put(TAG_LOCATION_ALTITUDE, poi.getLocation().getAltitude());
+			location.put(TAG_LOCATION_LATITUDE, poi.getLocation().getLatitude());
+			location.put(TAG_LOCATION_LONGITUDE, poi.getLocation().getLongitude());
+			
+			jsonObj.put(TAG_LOCATION, location);
+			
+			//RESSOURCES
+			JSONArray resources = new JSONArray();
+			
+			for(Resource r : poi.getResources()) {
+				
+				JSONObject ress = new JSONObject();
+				
+				ress.put(TAG_RESOURCES_TYPE, r.getType());
+				ress.put(TAG_RESOURCES_AUTHOR, r.getAuthor());
+				ress.put(TAG_RESOURCES_DESCRIPTION, r.getDescription());
+				
+				switch(r.getType()) {
+				
+				case IMAGE:
+					ress.put(TAG_RESOURCES_URL, ((ImageResource)r).getURLImage());
+					break;
+				case TEXT:
+					ress.put(TAG_RESOURCES_DESCRIPTION, ((TextResource)r).getContent());
+					break;
+				case IMAGEAR:
+					ress.put(TAG_RESOURCES_URL, ((ImageARResource)r).getURLImage());
+					break;
+				}
+									
+				resources.put(ress);
+			}
+			
+			jsonObj.put(TAG_RESOURCES, resources);
+			
+		}
+		else
+		{
+			throw new Exception("POI is null.");
+		}
+		
+		return jsonObj.toString();	
 	}
 	
 }
+
 
 
 /*

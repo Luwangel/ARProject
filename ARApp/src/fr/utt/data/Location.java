@@ -54,7 +54,7 @@ public class Location {
 	/**
 	 * @return the altitude
 	 */
-	public double getAltirude() {
+	public double getAltitude() {
 		return altitude;
 	}
 
