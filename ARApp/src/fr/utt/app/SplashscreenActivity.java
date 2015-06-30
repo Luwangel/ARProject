@@ -17,23 +17,23 @@ public class SplashscreenActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_splashscreen);
 		
-	     new Handler().postDelayed(new Runnable() {
-	    	 
-	            /*
-	             * Affiche un écran de chargement à l'aide d'un timer.
-	             */
+		new Handler().postDelayed(new Runnable() {
+		
+	        /*
+	         * Affiche un écran de chargement à l'aide d'un timer.
+	         */
 	 
 	            @Override
 	            public void run() {
 	                // This method will be executed once the timer is over
-	                // Start your app main activity
+	            // Start your app main activity
 	                Intent i = new Intent(SplashscreenActivity.this, MainActivity.class);
 	                startActivity(i);
 	 
 	                // close this activity
-	                finish();
-	            }
-	        }, SPLASH_TIME_OUT);
+	            finish();
+	        }
+		}, SPLASH_TIME_OUT);
 	}
 
 	@Override

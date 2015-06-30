@@ -1,6 +1,15 @@
 package fr.utt.app;
 
+import java.util.ArrayList;
+
 import fr.utt.ar.CustomARSetup;
+import fr.utt.data.ImageResource;
+import fr.utt.data.JSONFileManager;
+import fr.utt.data.JSONParser;
+import fr.utt.data.POI;
+import fr.utt.data.Resource;
+import fr.utt.data.ResourceType;
+import fr.utt.data.TextResource;
 import gl.GL1Renderer;
 import gl.GLCamera;
 import gl.GLFactory;
@@ -22,6 +31,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -56,7 +66,7 @@ public class MainActivity extends Activity implements SensorEventListener, Locat
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
+		
 		//Récupération des boutons
 		this.showDatasButton = (Button) findViewById(R.id.buttonShowDatas);
     	this.arActivityButton = (Button) findViewById(R.id.buttonARActivity);
@@ -104,6 +114,8 @@ public class MainActivity extends Activity implements SensorEventListener, Locat
 
 		    	TextView textviewDatas = (TextView) findViewById(R.id.textviewDatas);
 		        textviewDatas.setText(datas);
+		        
+		        
 		    }
 		});
 		
@@ -122,6 +134,8 @@ public class MainActivity extends Activity implements SensorEventListener, Locat
 				});
 		    }
 		});
+		
+		this.initDatas();
 	}
 
 	
@@ -252,5 +266,42 @@ public class MainActivity extends Activity implements SensorEventListener, Locat
 	    else {
 	    	lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MainActivity.FREQUENCY_LOCATION_UPDATE, 0, this);
 	    }
+    }
+    
+    private void initDatas() {
+		
+		JSONFileManager jfm = new JSONFileManager(this);
+		
+		POI poi = new POI();
+		poi.setName("Université de Technologie de Troyes");
+		poi.setLocation(new fr.utt.data.Location(this.latitude,this.longitude,this.altitude));
+		
+		ArrayList<Resource> listResources = new ArrayList<Resource>();
+		ImageResource r1 = new ImageResource();
+		r1.setType(ResourceType.IMAGE);
+		r1.setAuthor("Adrien");
+		r1.setDescription("Bibliothèque");
+		r1.setURLImage("http://t3.gstatic.com/images?q=tbn:ANd9GcSXqX5OmNOtEo-Mmhp8H1axjvq-cBq5zlYQnJomegQ76xlnlzM2cv42y4Tw");
+		
+		listResources.add(r1);
+		
+		TextResource r2 = new TextResource();
+		r2.setType(ResourceType.TEXT);
+		r2.setAuthor("Juju");
+		r2.setDescription("Partiel");
+		r2.setContent("20/20");
+		
+		listResources.add(r2);
+		
+		poi.setResources(listResources);
+		
+		try {
+			jfm.CreateFileOnInternalStorage("POITest",JSONParser.exportPOI(poi));
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		Log.d("JSON", jfm.ReadFileFromInternalStorage("POITest"));
     }
 }

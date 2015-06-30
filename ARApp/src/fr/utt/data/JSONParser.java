@@ -26,6 +26,12 @@ public class JSONParser {
 	
 	/* Méthodes */
 	
+	/**
+	 * 
+	 * @param jsonStr
+	 * @return
+	 * @throws Exception
+	 */
 	public static POI ImportPOI(String jsonStr) throws Exception {
 		
 		if (jsonStr != null && !jsonStr.isEmpty()) {
@@ -109,6 +115,12 @@ public class JSONParser {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param poi
+	 * @return
+	 * @throws Exception
+	 */
 	public static String exportPOI(POI poi) throws Exception {
 				
 		JSONObject jsonObj = new JSONObject();
