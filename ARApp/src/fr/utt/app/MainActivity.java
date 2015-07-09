@@ -13,14 +13,18 @@ import fr.utt.data.TextResource;
 import gl.GL1Renderer;
 import gl.GLCamera;
 import gl.GLFactory;
+import gl.scenegraph.MeshComponent;
 import system.ArActivity;
 import system.CameraView;
+import system.DefaultARSetup;
 import util.IO;
 import util.Vec;
+import worldData.Obj;
 import worldData.World;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -48,6 +52,7 @@ public class MainActivity extends Activity implements SensorEventListener, Locat
 	/* Interface */
 	private Button showDatasButton;
 	private Button arActivityButton;
+	private Button arActivity2Button;
 		
 	/* Géolocalisation */
 	private LocationManager lm;
@@ -65,12 +70,14 @@ public class MainActivity extends Activity implements SensorEventListener, Locat
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
 		setContentView(R.layout.activity_main);
 		
 		//Récupération des boutons
 		this.showDatasButton = (Button) findViewById(R.id.buttonShowDatas);
     	this.arActivityButton = (Button) findViewById(R.id.buttonARActivity);
-
+    	this.arActivity2Button = (Button) findViewById(R.id.buttonARActivity2);
+    	
     	//Ajout des listeners sur les boutons
 		this.showDatasButton.setOnClickListener(new View.OnClickListener() {
 		    public void onClick(View v) {
@@ -119,17 +126,46 @@ public class MainActivity extends Activity implements SensorEventListener, Locat
 		    }
 		});
 		
+		
 		this.arActivityButton.setOnClickListener(new View.OnClickListener() {
-		    public void onClick(View v) {
+		    public void onClick(View v) {       
 		    	
 		    	//Ouverture d'une ARActivity
 		    	ArActivity.startWithSetup(MainActivity.this, new CustomARSetup(){
 
 					@Override
 					public void addObjectsTo(GL1Renderer renderer, World world, GLFactory objectFactory) {
-						Bitmap image = IO.loadBitmapFromURL("http://t3.gstatic.com/images?q=tbn:ANd9GcSXqX5OmNOtEo-Mmhp8H1axjvq-cBq5zlYQnJomegQ76xlnlzM2cv42y4Tw");              
-						world.add(objectFactory.newTexturedSquare("image test", image, 10));
-						world.add(objectFactory.newArrow());
+							
+						Log.d("ARAPP", "Ajout de l'image");
+						Bitmap image = IO.loadBitmapFromURL("http://www.proprofs.com/quiz-school/upload/yuiupload/1334506210.jpg");              
+												
+						if(image != null) {
+							
+							Log.d("ARAPP", "L'image est :" + image.toString());
+							MeshComponent mesh = objectFactory.newTexturedSquare("image test", image, 1);
+							mesh.setPosition(new Vec(1,0,0));
+							Obj imgObj = new Obj();
+							imgObj.setComp(mesh);
+							world.add(imgObj);
+						}
+						else
+						{
+							Log.d("ARAPP", "Image non importée");
+						}
+					}
+		    	});
+		    }
+		});
+		
+		this.arActivity2Button.setOnClickListener(new View.OnClickListener() {
+		    public void onClick(View v) {
+		    	
+				ArActivity.startWithSetup(MainActivity.this, new DefaultARSetup(){
+
+					@Override
+					public void addObjectsTo(GL1Renderer renderer, World world, GLFactory objectFactory) {
+				    	Log.d("ARAPP", "Ajout du système solaire");
+						world.add(objectFactory.newSolarSystem(new Vec(10, 0, 0)));
 					}
 				});
 		    }

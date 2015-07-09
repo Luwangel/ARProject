@@ -35,6 +35,12 @@
         android:layout_height="wrap_content"
         android:text="@string/button_aractivity"/>
     
+    <Button 
+        android:id="@+id/buttonARActivity2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_aractivity_2"/>
+    
     </LinearLayout>
     
 </RelativeLayout>
